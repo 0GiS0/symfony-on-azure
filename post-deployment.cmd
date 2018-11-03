@@ -18,7 +18,19 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo Done composer install
 
-echo npm install
+if exist "package.json" (
+    echo found package.json
+) else (
+    echo package.json not found. Skipping npm install
+    EXIT /b 0
+)
+
+echo calling npm install
 call npm install
+if %ERRORLEVEL% NEQ 0 (
+    echo npm install failed. >&2
+    EXIT /b 1 
+)
+echo Done npm install
 echo Executing webpack
 call npm run-script build
